@@ -1,0 +1,43 @@
+package utility;
+
+import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+public class RecentlyPlayedSongsStoreTest {
+    private RecentlyPlayedSongsStore store;
+
+    @BeforeClass
+    public void setUp() {
+        store = new RecentlyPlayedSongsStore(3);
+    }
+
+    @Test
+    public void testRecentlyPlayedSongs() {
+        store.playSong("user1", "S1");
+        store.playSong("user1", "S2");
+        store.playSong("user1", "S3");
+        List<String> expectedPlaylist1 = Arrays.asList("S1", "S2", "S3");
+        assertEquals(store.getRecentlyPlayedSongs("user1"), expectedPlaylist1);
+
+        store.playSong("user1", "S4");
+        List<String> expectedPlaylist2 = Arrays.asList("S2", "S3", "S4");
+        assertEquals(store.getRecentlyPlayedSongs("user1"), expectedPlaylist2);
+
+        store.playSong("user1", "S2");
+        List<String> expectedPlaylist3 = Arrays.asList("S3", "S4", "S2");
+        assertEquals(store.getRecentlyPlayedSongs("user1"), expectedPlaylist3);
+
+        store.playSong("user1", "S1");
+        List<String> expectedPlaylist4 = Arrays.asList("S4", "S2", "S1");
+        assertEquals(store.getRecentlyPlayedSongs("user1"), expectedPlaylist4);
+
+        // User2 hasn't played any songs yet
+        List<String> expectedEmptyPlaylist = Arrays.asList();
+        assertEquals(store.getRecentlyPlayedSongs("user2"), expectedEmptyPlaylist);
+    }
+}

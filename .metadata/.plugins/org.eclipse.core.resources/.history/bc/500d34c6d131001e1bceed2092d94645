@@ -1,0 +1,42 @@
+package utility;
+
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import utility.Songs.Song;
+
+public class Recently_Played_Store {
+
+	
+    private final int capacity;
+    private Map<User, LinkedList<Song>> store;
+
+    public Recently_Played_Store(int capacity) {
+        this.capacity = capacity;
+        this.store = new HashMap<>();
+    }
+
+    public void addRecentlyPlayedSong(User user, Song song) {
+        if (!store.containsKey(user)) {
+            store.put(user, new LinkedList<>());
+        }
+
+        LinkedList<Song> userPlaylist = store.get(user);
+        userPlaylist.remove(song); // Remove the song if it's already in the playlist
+        userPlaylist.addFirst(song); // Add the song to the front of the playlist
+
+        // If the playlist exceeds capacity, remove the least recently played song
+        if (userPlaylist.size() > capacity) {
+            userPlaylist.removeLast();
+        }
+    }
+
+    public List<Song> getRecentlyPlayedSongs(User user) {
+        return store.getOrDefault(user, new LinkedList<>());
+    }
+}

@@ -1,0 +1,30 @@
+
+Sure, let's go through the code step by step to understand how it works:
+
+The class RecentlyPlayedStore is defined with the following member variables:
+
+capacity: An integer representing the maximum number of songs per user in the store.
+initialCapacity: An integer representing the initial capacity of the store.
+usersSongsMap: A map that associates each user with their recently played songs. It uses a LinkedHashMap to maintain the insertion order of the songs based on their play time.
+songsToUsersMap: A map that associates each song with the user who played it.
+The constructor RecentlyPlayedStore is defined to initialize the object with the given capacity and initialCapacity. It creates two empty HashMaps for usersSongsMap and songsToUsersMap.
+
+The method addRecentlyPlayedSong is defined to add a recently played song for a given user. If the user is not present in the usersSongsMap, it creates a new entry for the user and associates a new LinkedHashMap with the user to store their recently played songs. The LinkedHashMap is set to maintain insertion order, and it has an overridden removeEldestEntry method to ensure the map doesn't exceed the specified capacity. The song and its timestamp (current time in milliseconds) are added to the user's LinkedHashMap, and the song is also added to the songsToUsersMap to keep track of which user played it.
+
+The method getRecentlyPlayedSongs is defined to get the list of recently played songs for a given user. If the user is not present in the usersSongsMap, it returns an empty ArrayList.
+
+The method printPlaylist is defined to print the playlist of recently played songs for a given user. It calls the getRecentlyPlayedSongs method and prints the list of songs obtained.
+
+The method removeLeastRecentlyPlayedSong is defined to remove the least recently played song from the store. It checks if the usersSongsMap is not empty, and then it selects the first user from the map using an iterator. It then retrieves the user's LinkedHashMap and removes the least recently played song (the one at the beginning of the insertion order) from the map. The corresponding entry is also removed from the songsToUsersMap.
+
+The main method demonstrates the usage of the RecentlyPlayedStore class. It creates a new instance of the store with capacity set to 3 and initialCapacity set to 5.
+
+The example usage shows how songs are added to the store for "user1" and how the playlist is printed at various stages after adding songs. The playlist is displayed as an ArrayList of recently played songs for the specified user.
+
+Here's a breakdown of the example usage:
+
+The store is created with capacity 3 and initial capacity 5.
+Three songs "S1", "S2", and "S3" are added for "user1". The play_list for "user1" is printed, which shows ["S3", "S2", "S1"] (the order is based on the play time).
+A fourth song "S4" is added for "user1". The play_list is printed again, now showing ["S4", "S3", "S2"] since "S1" was removed from the play_list due to exceeding the capacity.
+"S2" is added again for "user1". The play_list is printed, showing ["S2", "S4", "S3"]. Since "S2" was played again, it is moved to the front of the play_list.
+"S1" is added again for "user1". The play_list is printed, now showing ["S1", "S2", "S4"]. "S3" was removed from the play_list due to exceeding the capacity again.

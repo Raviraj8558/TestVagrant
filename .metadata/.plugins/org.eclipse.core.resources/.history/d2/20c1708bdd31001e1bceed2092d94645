@@ -1,0 +1,49 @@
+package utility;
+
+import java.util.*;
+
+public class RecentlyPlayedtore {
+
+	
+	private int initialCapacity;
+    private Map<String, Deque<String>> userSongsMap;
+
+    public RecentlyPlayedtore(int initialCapacity) {
+        this.initialCapacity = initialCapacity;
+        this.userSongsMap = new HashMap<>();
+    }
+
+    public void addRecentlyPlayedSong(String user, String song) {
+        try {
+            if (!userSongsMap.containsKey(user)) {
+                userSongsMap.put(user, new LinkedList<>());
+            }
+
+            Deque<String> songsList = userSongsMap.get(user);
+
+            // If the song is already played by the user, remove it from the list to update its position
+            songsList.remove(song);
+
+            // Add the new song to the front of the list
+            songsList.addFirst(song);
+
+            // If the list exceeds the capacity, remove the least recently played song
+            if (songsList.size() > initialCapacity) {
+                songsList.removeLast();
+            }
+        } catch (Exception e) {
+            // Handle the exception here or print the error message
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        try {
+            return (List<String>) userSongsMap.getOrDefault(user, new LinkedList<>());
+        } catch (Exception e) {
+            // Handle the exception here or print the error message
+            e.printStackTrace();
+            return new LinkedList<>();
+        }
+}
+}

@@ -1,0 +1,78 @@
+import org.testng.annotations.Test;
+import java.util.*;
+
+public class Recently_Played_Store {
+
+    private final int initialCapacity;
+    private final Map<String, String> songUserMap; // LinkedHashMap to preserve the order of insertion
+    private final Queue<String> recentlyPlayedQueue;
+
+    public Recently_Played_Store(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than 0.");
+        }
+        this.initialCapacity = capacity;
+        this.songUserMap = new LinkedHashMap<>();
+        this.recentlyPlayedQueue = new LinkedList<>();
+    }
+
+    public void playSong(String song, String user) {
+        // If the song was previously played, remove it from the queue and the map
+        if (songUserMap.containsKey(song)) {
+            recentlyPlayedQueue.remove(song);
+        }
+        // If the store is full, remove the least recently played song
+        if (songUserMap.size() >= initialCapacity) {
+            String leastRecentlyPlayedSong = recentlyPlayedQueue.poll();
+            songUserMap.remove(leastRecentlyPlayedSong);
+        }
+        // Add the song to the map and the queue with the user
+        songUserMap.put(song, user);
+        recentlyPlayedQueue.offer(song);
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        List<String> result = new ArrayList<>();
+        for (String song : recentlyPlayedQueue) {
+            if (songUserMap.get(song).equals(user)) {
+                result.add(song);
+            }
+        }
+        return result;
+    }
+
+    @Test
+    public void testRecentlyPlayedStore() {
+    	Recently_Played_Store store = new Recently_Played_Store(3);
+
+        store.playSong("S1", "User1");
+        store.playSong("S2", "User1");
+        store.playSong("S3", "User1");
+        // Playlist: S1, S2, S3
+
+        assert store.getRecentlyPlayedSongs("User1").equals(Arrays.asList("S1", "S2", "S3"));
+
+        store.playSong("S4", "User1");
+        // Playlist: S2, S3, S4
+
+        assert store.getRecentlyPlayedSongs("User1").equals(Arrays.asList("S2", "S3", "S4"));
+
+        store.playSong("S2", "User1");
+        // Playlist: S3, S4, S2
+
+        assert store.getRecentlyPlayedSongs("User1").equals(Arrays.asList("S3", "S4", "S2"));
+
+        store.playSong("S1", "User1");
+        // Playlist: S4, S2, S1
+
+        assert store.getRecentlyPlayedSongs("User1").equals(Arrays.asList("S4", "S2", "S1"));
+
+        store.playSong("S5", "User2");
+        // Playlist: S2, S1, S5
+
+        assert store.getRecentlyPlayedSongs("User2").equals(Arrays.asList("S5"));
+
+        // The store should not contain any songs played by User3 at this point
+        assert store.getRecentlyPlayedSongs("User3").isEmpty();
+    }
+}

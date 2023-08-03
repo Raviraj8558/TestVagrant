@@ -1,0 +1,42 @@
+package utility;
+
+import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.testng.annotations.Test;
+
+public class RecentlyPlayedStoreTest {
+	
+	 @Test
+	    public void testRecentlyPlayedSongs() {
+		 RecentlyPlayedtore store = new RecentlyPlayedtore(3);
+
+		 store.addRecentlyPlayedSong("user1", "S1");
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.addRecentlyPlayedSong("user1", "S3");
+
+	        List<String> user1Songs = store.getRecentlyPlayedSongs("user1");
+	        assert user1Songs.equals(Arrays.asList("S1", "S2", "S3")) : "Test case 1 failed";
+
+	        store.addRecentlyPlayedSong("user1", "S4");
+	        user1Songs = store.getRecentlyPlayedSongs("user1");
+	        assert user1Songs.equals(Arrays.asList("S2", "S3", "S4")) : "Test case 2 failed";
+
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        user1Songs = store.getRecentlyPlayedSongs("user1");
+	        assert user1Songs.equals(Arrays.asList("S3", "S4", "S2")) : "Test case 3 failed";
+
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        user1Songs = store.getRecentlyPlayedSongs("user1");
+	        assert user1Songs.equals(Arrays.asList("S4", "S2", "S1")) : "Test case 4 failed";
+
+	        store.addRecentlyPlayedSong("user2", "SongA");
+	        store.addRecentlyPlayedSong("user2", "SongB");
+	        store.addRecentlyPlayedSong("user2", "SongC");
+	        store.addRecentlyPlayedSong("user2", "SongD");
+	        List<String> user2Songs = store.getRecentlyPlayedSongs("user2");
+	        assert user2Songs.equals(Arrays.asList("SongB", "SongC", "SongD")) : "Test case 5 failed";
+	    }
+ }
+

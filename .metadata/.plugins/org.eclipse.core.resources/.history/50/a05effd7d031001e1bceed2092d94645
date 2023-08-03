@@ -1,0 +1,64 @@
+package utility;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Recently_Played_Store {
+
+	
+	private final int capacity;                                      // Maximum number of songs per user
+    private final int initialCapacity;                               // Initial capacity of the store
+    private Map<String, LinkedHashMap<String, Long>> usersSongsMap;  // Map of user to their recently played songs (ordered by play time)
+    private Map<String, String> songsToUsersMap;                     // Map of song to the user who played it
+
+    public Recently_Played_Store(int capacity, int initialCapacity) {
+        this.capacity = capacity;
+        this.initialCapacity = initialCapacity;
+        usersSongsMap = new HashMap<>(initialCapacity);
+        songsToUsersMap = new HashMap<>();
+    }
+
+    public void addRecentlyPlayedSong(String user, String song) {
+        if (!usersSongsMap.containsKey(user)) {
+            usersSongsMap.put(user, new LinkedHashMap<String, Long>(capacity, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Long> eldest) {
+                    return size() > capacity;
+                }
+            });
+        }
+
+        LinkedHashMap<String, Long> userSongs = usersSongsMap.get(user);
+        userSongs.put(song, System.currentTimeMillis());
+        songsToUsersMap.put(song, user);
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        if (!usersSongsMap.containsKey(user)) {
+            return new ArrayList<>();
+        }
+
+        LinkedHashMap<String, Long> userSongs = usersSongsMap.get(user);
+        return new ArrayList<>(userSongs.keySet());
+    }
+
+    public void printPlaylist(String user) {
+        List<String> songs = getRecentlyPlayedSongs(user);
+        System.out.println("Playlist for user " + user + ": " + songs);
+    }
+
+    public void removeLeastRecentlyPlayedSong() {
+        if (!usersSongsMap.isEmpty()) {
+            String userWithLeastRecentlyPlayed = usersSongsMap.entrySet().iterator().next().getKey();
+            LinkedHashMap<String, Long> userSongs = usersSongsMap.get(userWithLeastRecentlyPlayed);
+            if (!userSongs.isEmpty()) {
+                String leastRecentlyPlayedSong = userSongs.keySet().iterator().next();
+                userSongs.remove(leastRecentlyPlayedSong);
+                songsToUsersMap.remove(leastRecentlyPlayedSong);
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+package testng;
+
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+public class RecentlyPlayedSongsStore {
+
+	 private int initialCapacity;
+	    private Map<String, Deque<String>> userSongsMap;
+
+	    public RecentlyPlayedSongsStore(int initialCapacity) {
+	        this.initialCapacity = initialCapacity;
+	        this.userSongsMap = new HashMap<>();
+	    }
+
+	    public void addRecentlyPlayedSong(String user, String song) {
+	        if (!userSongsMap.containsKey(user)) {
+	            userSongsMap.put(user, new LinkedList<>());
+	        }
+
+	        Deque<String> songsList = userSongsMap.get(user);
+
+	        // If the song is already played by the user, remove it from the list to update its position
+	        songsList.remove(song);
+
+	        // Add the new song to the front of the list
+	        songsList.addFirst(song);
+
+	        // If the list exceeds the capacity, remove the least recently played song
+	        if (songsList.size() > initialCapacity) {
+	            songsList.removeLast();
+	        }
+	    }
+
+	    public List<String> getRecentlyPlayedSongs(String user) {
+	        return userSongsMap.getOrDefault(user, new LinkedList<>());
+	    }
+}

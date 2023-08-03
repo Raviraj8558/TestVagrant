@@ -1,0 +1,34 @@
+package utility;
+
+import java.util.*;
+
+public class RecentlyPlayedStore {
+    private final int capacity;
+    private final Map<String, LinkedHashSet<String>> userSongsMap;
+
+    public RecentlyPlayedStore(int capacity) {
+        this.capacity = capacity;
+        this.userSongsMap = new HashMap<>();
+    }
+
+    public void addRecentlyPlayedSong(String user, String song) {
+        userSongsMap.computeIfAbsent(user, k -> new LinkedHashSet<>());
+
+        LinkedHashSet<String> songs = userSongsMap.get(user);
+        if (songs.contains(song)) {
+            songs.remove(song);
+        }
+
+        if (songs.size() >= capacity) {
+            Iterator<String> iterator = songs.iterator();
+            iterator.next();
+            iterator.remove();
+        }
+
+        songs.add(song);
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        return new ArrayList<>(userSongsMap.getOrDefault(user, Collections.emptySet()));
+    }
+}

@@ -1,0 +1,24 @@
+package main;
+
+import test.Recently_Played_Store;
+
+public class Main_Method {
+
+	 public static void main(String[] args) {
+	
+	Recently_Played_Store store = new Recently_Played_Store(3, 5);
+
+    store.playSong("User1", "S1");
+    store.playSong("User1", "S2");
+    store.playSong("User1", "S3");
+
+    System.out.println("User1 Playlist: " + store.getRecentlyPlayedSongs("User1"));
+
+    store.playSong("User1", "S4");
+    store.playSong("User1", "S2");
+    store.playSong("User1", "S1");
+
+    System.out.println("User1 Updated Playlist: " + store.getRecentlyPlayedSongs("User1"));
+}
+	
+}

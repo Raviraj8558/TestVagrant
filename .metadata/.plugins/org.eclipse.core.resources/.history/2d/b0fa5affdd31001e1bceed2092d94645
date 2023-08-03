@@ -1,0 +1,41 @@
+package utility;
+
+import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.testng.annotations.Test;
+
+import test.Recently_Played_Store;
+
+public class RecentlyPlayedStoreTest {
+	
+	 @Test
+	    public void testRecentlyPlayedSongs() {
+		 RecentlyPlayedtore store = new RecentlyPlayedtore(3);
+
+
+	        try {
+	            Recently_Played_Store store = new Recently_Played_Store(3); // capacity = 3
+
+	            store.addRecentlyPlayedSong("user1", "S1");
+	            store.addRecentlyPlayedSong("user1", "S2");
+	            store.addRecentlyPlayedSong("user1", "S3");
+	            System.out.println("User :" + store.getRecentlyPlayedSongs("user1")); // Output: [S3, S2, S1]
+
+	            store.addRecentlyPlayedSong("user1", "S4");
+	            System.out.println("User :" + store.getRecentlyPlayedSongs("user1")); // Output: [S4, S3, S2]
+
+	            store.addRecentlyPlayedSong("user1", "S2");
+	            System.out.println("User :" + store.getRecentlyPlayedSongs("user1")); // Output: [S2, S4, S3]
+
+	            store.addRecentlyPlayedSong("user1", "S1");
+	            System.out.println("User :" + store.getRecentlyPlayedSongs("user1")); // Output: [S1, S2, S4]
+	      
+	        } catch (Exception e) {
+	            // Handle the exception here or print the error message
+	            e.printStackTrace();
+	        }
+	    }
+ }
+

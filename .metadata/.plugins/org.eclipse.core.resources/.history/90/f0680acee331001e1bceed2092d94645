@@ -1,0 +1,47 @@
+package test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
+public class RecentlyPlayedSongsStore {
+    private int capacity;
+    private Map<String, Queue<String>> songUserMap;
+
+    public RecentlyPlayedSongsStore(int capacity) {
+        this.capacity = capacity;
+        this.songUserMap = new LinkedHashMap<>();
+    }
+
+    public void playSong(String user, String song) {
+        if (!songUserMap.containsKey(user)) {
+            songUserMap.put(user, new LinkedList<>());
+        }
+
+        Queue<String> playlist = songUserMap.get(user);
+
+        // Check if the song is already in the playlist and remove it to maintain uniqueness
+        playlist.remove(song);
+
+        // Add the song to the front of the playlist
+        playlist.add(song);
+
+        // If the playlist size exceeds capacity, remove the least recently played song
+        if (playlist.size() > capacity) {
+            playlist.poll();
+        }
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        if (!songUserMap.containsKey(user)) {
+            return Collections.emptyList();
+        }
+
+        // Return the playlist for the user
+        return new ArrayList<>(songUserMap.get(user));
+    }
+}

@@ -1,0 +1,35 @@
+package testng;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+public class Recently_Played_Store_Test {
+
+    private final int initialCapacity;
+    private final Map<String, LinkedList<String>> recentlyPlayedSongs;
+
+    public Recently_Played_Store_Test(int capacity) {
+        this.initialCapacity = capacity;
+        this.recentlyPlayedSongs = new HashMap<>();
+    }
+
+    public void addSong(String user, String song) {
+        if (!recentlyPlayedSongs.containsKey(user)) {
+            recentlyPlayedSongs.put(user, new LinkedList<>());
+        }
+
+        LinkedList<String> playlist = recentlyPlayedSongs.get(user);
+        if (playlist.size() >= initialCapacity) {
+            playlist.removeFirst(); // Remove the least recently played song
+        }
+        playlist.addLast(song); // Add the new song to the end
+    }
+
+    public List<String> getRecentSongsByUser(String user) {
+        return recentlyPlayedSongs.getOrDefault(user, Collections.emptyList());
+    }
+	
+}

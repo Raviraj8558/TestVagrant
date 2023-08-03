@@ -1,0 +1,70 @@
+package testng;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+
+
+ class RecentlyPlayedSongsStoreTest {
+	  
+		
+		private final int initialCapacity;
+	    private final Map<String, LinkedList<String>> userSongMap;
+
+	    public RecentlyPlayedSongsStoreTest(int capacity) {
+	        this.initialCapacity = capacity;
+	        this.userSongMap = new HashMap<>();
+	    }
+
+	    public void addRecentlyPlayedSong(String user, String song) {
+	        if (!userSongMap.containsKey(user)) {
+	            userSongMap.put(user, new LinkedList<>());
+	        }
+
+	        LinkedList<String> playlist = userSongMap.get(user);
+	        if (playlist.contains(song)) {
+	            playlist.remove(song);
+	        } else if (playlist.size() >= initialCapacity) {
+	            playlist.removeLast();
+	        }
+	        playlist.addFirst(song);
+	    }
+
+	    public LinkedList<String> getRecentlyPlayedSongs(String user) {
+	        return userSongMap.getOrDefault(user, new LinkedList<>());
+	    }
+    }
+
+	public class RecentlyPlayedSongsStore {
+	    private RecentlyPlayedSongsStoreTest store;
+
+	    @BeforeMethod
+	    public void setUp() {
+	        int initialCapacity = 3;
+	        store = new RecentlyPlayedSongsStoreTest(initialCapacity);
+	    }
+
+	    @Test
+	    public void testRecentlyPlayedStore() {
+	        String user = "User1";
+	        store.addRecentlyPlayedSong(user, "S1");
+	        store.addRecentlyPlayedSong(user, "S2");
+	        store.addRecentlyPlayedSong(user, "S3");
+	        Assert.assertEquals(store.getRecentlyPlayedSongs(user), new LinkedList<>(List.of("S3", "S2", "S1")));
+
+	        store.addRecentlyPlayedSong(user, "S4");
+	        Assert.assertEquals(store.getRecentlyPlayedSongs(user), new LinkedList<>(List.of("S4", "S3", "S2")));
+
+	        store.addRecentlyPlayedSong(user, "S2");
+	        Assert.assertEquals(store.getRecentlyPlayedSongs(user), new LinkedList<>(List.of("S2", "S4", "S3")));
+
+	        store.addRecentlyPlayedSong(user, "S1");
+	        Assert.assertEquals(store.getRecentlyPlayedSongs(user), new LinkedList<>(List.of("S1", "S2", "S4")));
+	    }
+

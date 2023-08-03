@@ -1,0 +1,30 @@
+package utility;
+
+import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
+
+import org.testng.annotations.Test;
+
+public class RecentlyPlayedSongsStore {
+	
+	 @Test
+	    public void testRecentlyPlayedSongs() {
+		 RecentlyPlayedtore store = new RecentlyPlayedtore(3);
+
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.addRecentlyPlayedSong("user1", "S3");
+	        assertEquals(store.getRecentlyPlayedSongs("user1"), Arrays.asList("S1", "S2", "S3"));
+
+	        store.addRecentlyPlayedSong("user1", "S4");
+	        assertEquals(store.getRecentlyPlayedSongs("user1"), Arrays.asList("S2", "S3", "S4"));
+
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        assertEquals(store.getRecentlyPlayedSongs("user1"), Arrays.asList("S3", "S4", "S2"));
+
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        assertEquals(store.getRecentlyPlayedSongs("user1"), Arrays.asList("S4", "S2", "S1"));
+	    }	
+ }
+

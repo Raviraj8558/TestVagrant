@@ -1,0 +1,66 @@
+package test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Recently_Played_Store {
+
+	
+	 private int initialCapacity;
+	    private int maxCapacity;
+	    private Map<String, LinkedHashMap<String, Integer>> userPlaylists;
+
+	    public Recently_Played_Store(int initialCapacity, int maxCapacity) {
+	        this.initialCapacity = initialCapacity;
+	        this.maxCapacity = maxCapacity;
+	        this.userPlaylists = new HashMap<>();
+	    }
+
+	    public void playSong(String user, String song) {
+	        // If the user is not in the playlist, create a new playlist for them
+	        userPlaylists.putIfAbsent(user, new LinkedHashMap<>());
+
+	        // Get the user's playlist
+	        LinkedHashMap<String, Integer> playlist = userPlaylists.get(user);
+
+	        // If the song is already in the playlist, update its timestamp to show it was recently played
+	        if (playlist.containsKey(song)) {
+	            playlist.remove(song);
+	        } else if (playlist.size() >= maxCapacity) {
+	            // If the playlist is already full, remove the least recently played song
+	            Iterator<Map.Entry<String, Integer>> iterator = playlist.entrySet().iterator();
+	            iterator.next(); // Move to the first entry (the oldest song)
+	            iterator.remove(); // Remove the least recently played song
+	        }
+
+	        // Add the song to the end of the playlist with the current timestamp
+	        playlist.put(song, (int) System.currentTimeMillis());
+	    }
+
+	    public List<String> getRecentlyPlayedSongs(String user) {
+	        // If the user is not in the playlist, return an empty list
+	        if (!userPlaylists.containsKey(user)) {
+	            return Collections.emptyList();
+	        }
+
+	        // Get the user's playlist
+	        LinkedHashMap<String, Integer> playlist = userPlaylists.get(user);
+
+	        // Sort the songs based on their timestamps (recently played first)
+	        List<Map.Entry<String, Integer>> sortedPlaylist = new ArrayList<>(playlist.entrySet());
+	        sortedPlaylist.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
+
+	        // Extract the sorted list of song names
+	        List<String> recentlyPlayedSongs = new ArrayList<>();
+	        for (Map.Entry<String, Integer> entry : sortedPlaylist) {
+	            recentlyPlayedSongs.add(entry.getKey());
+	        }
+
+	        return recentlyPlayedSongs;
+	
+}

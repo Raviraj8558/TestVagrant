@@ -1,0 +1,27 @@
+package main;
+
+import test.Recently_Played_Store;
+
+public class Main_Method {
+
+	 public static void main(String[] args) {
+	
+		  Recently_Played_Store store = new Recently_Played_Store(3, 5); // capacity = 3, initial capacity = 5
+
+	        // Example Usage
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.addRecentlyPlayedSong("user1", "S3");
+	        store.printPlaylist("user1");
+
+	        store.addRecentlyPlayedSong("user1", "S4");
+	        store.printPlaylist("user1");
+
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.printPlaylist("user1");
+
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        store.printPlaylist("user1");
+	
+}
+}

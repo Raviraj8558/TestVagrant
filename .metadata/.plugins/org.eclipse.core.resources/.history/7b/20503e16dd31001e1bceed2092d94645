@@ -1,0 +1,57 @@
+package test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+public class Recently_Played_Store {
+
+	
+
+public class RecentlyPlayedStore {
+    private final int capacity;
+    private final Map<String, LinkedHashSet<String>> userSongsMap;
+
+    public RecentlyPlayedStore(int capacity) {
+        this.capacity = capacity;
+        this.userSongsMap = new HashMap<>();
+    }
+
+    public void addRecentlyPlayedSong(String user, String song) {
+        try {
+            userSongsMap.computeIfAbsent(user, k -> new LinkedHashSet<>());
+
+            LinkedHashSet<String> songs = userSongsMap.get(user);
+            if (songs.contains(song)) {
+                songs.remove(song);
+            }
+
+            if (songs.size() >= capacity) {
+                Iterator<String> iterator = songs.iterator();
+                iterator.next();
+                iterator.remove();
+            }
+
+            songs.add(song);
+        } catch (Exception e) {
+            // Handle the exception (e.g., log it or take appropriate action)
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        try {
+            LinkedHashSet<String> songs = userSongsMap.getOrDefault(user, new LinkedHashSet<>());
+            return new ArrayList<>(songs);
+        } catch (Exception e) {
+            // Handle the exception (e.g., log it or take appropriate action)
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+}
+}

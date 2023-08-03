@@ -1,0 +1,46 @@
+package test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+public class Recently_Played_Store {
+
+	
+
+    private final int initialCapacity;
+    private final int maxSongsPerUser;
+    private final Map<String, LinkedHashMap<String, Boolean>> userSongs;
+
+    public Recently_Played_Store(int initialCapacity, int maxSongsPerUser) {
+        this.initialCapacity = initialCapacity;
+        this.maxSongsPerUser = maxSongsPerUser;
+        this.userSongs = new LinkedHashMap<>(initialCapacity);
+    }
+
+    public void addRecentlyPlayedSong(String user, String song) {
+        userSongs.putIfAbsent(user, new LinkedHashMap<String, Boolean>() {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, Boolean> eldest) {
+                return size() > maxSongsPerUser;
+            }
+        });
+
+        LinkedHashMap<String, Boolean> userPlaylist = userSongs.get(user);
+        userPlaylist.put(song, true);
+    }
+
+    public List<String> getRecentlyPlayedSongs(String user) {
+        LinkedHashMap<String, Boolean> userPlaylist = userSongs.get(user);
+        if (userPlaylist == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(userPlaylist.keySet());
+    }
+}

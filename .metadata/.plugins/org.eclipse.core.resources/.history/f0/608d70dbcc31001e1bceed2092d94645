@@ -1,0 +1,43 @@
+package testng;
+
+import java.util.List;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+public class Recently_Played_Store_Test {
+
+	 private Recently_Played_Store store;
+
+	    @BeforeClass
+	    public void setUp() {
+	        // Initialize the RecentlyPlayedStore before running any test method
+	        store = new Recently_Played_Store(3, 5); // capacity = 3, initial capacity = 5
+	    }
+
+	    @Test
+	    public void testAddRecentlyPlayedSong() {
+	        store.addRecentlyPlayedSong("user1", "S1");
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.addRecentlyPlayedSong("user1", "S3");
+
+	        List<String> user1Songs = store.getRecentlyPlayedSongs("user1");
+	        Assert.assertEquals(user1Songs, List.of("S1", "S2", "S3"));
+	    }
+
+	    @Test(dependsOnMethods = "testAddRecentlyPlayedSong")
+	    public void testRemoveLeastRecentlyPlayedSong() {
+	        store.addRecentlyPlayedSong("user1", "S4");
+	        store.addRecentlyPlayedSong("user1", "S2");
+	        store.addRecentlyPlayedSong("user1", "S1");
+
+	        List<String> user1Songs = store.getRecentlyPlayedSongs("user1");
+	        Assert.assertEquals(user1Songs, List.of("S2", "S1", "S4"));
+
+	        store.removeLeastRecentlyPlayedSong();
+	        user1Songs = store.getRecentlyPlayedSongs("user1");
+	        Assert.assertEquals(user1Songs, List.of("S1", "S4"));
+	    }
+	
+}
